@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class SqliteConnect {
 		
 		// SQLite JDBC URL
-		private static final String URL = "jdbc:sqlite:resource/db/PCFPdb.db";
+		private static final String URL = "jdbc:sqlite:resources/db/PCFPdb.db";
 		
 		// instance prevention
 		private SqliteConnect() {}

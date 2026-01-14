@@ -1,6 +1,9 @@
 package testbuild;
 
 import systempkg.SqliteConnect;
+import systempkg.RaceTextXmlLoader;
+
+import vopkg.RaceTextVO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +11,7 @@ import java.sql.ResultSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 // After, Change to "RaceInFoDAO"
@@ -23,9 +27,9 @@ public class RaceBasicInfoLoad {
 			System.out.println("===Race Index===");
 			int index = 1;
 			while (rs.next()) {
-				String Key = rs.getString("RACE_ID");
-				RACE_IDs.add(Key);
-				System.out.println(index + ". " + Key);
+				String RaceID = rs.getString("RACE_ID");
+				RACE_IDs.add(RaceID);
+				System.out.println(index + ". " + RaceID);
 				index++;
 			}
 		} catch (Exception e) {
@@ -63,7 +67,13 @@ public class RaceBasicInfoLoad {
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
-				System.out.println("\n[" + selectedRaceID + " Stats]");
+				Map<String, RaceTextVO> raceTextMap =
+						RaceTextXmlLoader.loadRaceTexts("ko_KR");
+				
+				RaceTextVO text = raceTextMap.get(selectedRaceID);
+				
+				System.out.println("\n[" + text.getRaceName() + " Stats]");
+				System.out.println(text.getRaceDesc() + "\n");
 				System.out.println("STR: " + rs.getInt("RACE_STR"));
 				System.out.println("CON: " + rs.getInt("RACE_CON"));
 				System.out.println("AGI: " + rs.getInt("RACE_AGI"));
