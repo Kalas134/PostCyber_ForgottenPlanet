@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 // After, Change to "RaceInFoDAO"
-public class RaceBasicInfoLoad {
+public class RaceBasicInfoLoader {
 	public static void main(String[] args) {
 		List<String> RACE_IDs = new ArrayList<>();
 		// 1. Race Index output
