@@ -4,12 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 
-import vopkg.DefaultCharacterVO;
-
-public class CharaterXmlGenerator {
+public class SaveSlotGenerator {
 	
-	public static Path generateNewCharacterXml(
-			DefaultCharacterVO vo, Path saveDir) {
+	public static Path createNewSaveSlot(Path saveDir) {
 		
 		// 1. saveDir Generate
 		try {
@@ -33,15 +30,15 @@ public class CharaterXmlGenerator {
 				}
 				slot++;
 	 		}
-			
-			// 2. XML Document Generate
-			// 3. vo value to XML fill
-			// 4. experience = 0
-			// 5. file save
-			
+		
 			return slotDir;
 		} catch (IOException e) {
 			throw new RuntimeException("Save directory creation failed", e);
 		}
 	}
+	
+	// 2. XML Document Generate
+	// 3. vo value to XML fill
+	// 4. experience = 0
+	// 5. file save
 }
