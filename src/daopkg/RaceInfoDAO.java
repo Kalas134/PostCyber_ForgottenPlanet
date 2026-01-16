@@ -27,7 +27,7 @@ public class RaceInfoDAO {
 			 ResultSet rs = ps.executeQuery()) {
 			
 			while (rs.next()) {
-				raceIds.add("Race_ID");
+				raceIds.add(rs.getString("Race_ID"));
 			}
 		}
 		return raceIds;
