@@ -1,23 +1,13 @@
 package daopkg;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import systempkg.SqliteConnect;
 import vopkg.DefaultCharacterVO;
 
 public class DefaultCharacterLoader {
-	
-	private final String dbUrl;
-	
-	public DefaultCharacterLoader(String dbUrl) {
-		this.dbUrl = dbUrl;
-	}
-	
-	private Connection connect() throws Exception {
-		return DriverManager.getConnection(dbUrl);
-	}
 	
 	public DefaultCharacterVO loadDefaultPlayer() {
 		String sql = """
@@ -38,7 +28,7 @@ public class DefaultCharacterLoader {
 				WHERE Char_ID = 1
 				""";
 		try (
-			Connection conn = connect();
+			Connection conn = SqliteConnect.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
 		) {

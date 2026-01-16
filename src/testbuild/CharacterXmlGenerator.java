@@ -18,7 +18,7 @@ import vopkg.DefaultCharacterVO;
 
 public class CharacterXmlGenerator {
 	
-	public static void generateCharacterXml(
+	public static void generateNewGameCharacterXml(
 			Path xmlPath,
 			List<DefaultCharacterVO> Characters) {
 		try {

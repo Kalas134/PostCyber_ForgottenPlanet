@@ -36,9 +36,4 @@ public class SaveSlotGenerator {
 			throw new RuntimeException("Save directory creation failed", e);
 		}
 	}
-	
-	// 2. XML Document Generate
-	// 3. vo value to XML fill
-	// 4. experience = 0
-	// 5. file save
 }
