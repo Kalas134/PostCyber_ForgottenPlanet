@@ -12,6 +12,7 @@ import systempkg.PlayerCustomize;
 import vopkg.DefaultCharacterVO;
 
 import daopkg.DefaultCharacterLoader;
+import daopkg.RaceInfoDAO;
 
 public class ConsoleMain {
 	private static final Scanner sc = new Scanner(System.in);
@@ -66,14 +67,26 @@ public class ConsoleMain {
 			System.out.print("Player Name? ▶ ");
 			String name = sc.nextLine();
 			
-			System.out.print("Race? ▶ ");
+			List<String> raceIds = RaceInfoDAO.loadRaceIds();
+			
+			System.out.println("Race Select");
+			for (int i = 0; i < raceIds.size(); i++) {
+				System.out.println((i + 1) + ". " + raceIds.get(i));
+			}
+			int raceChoice;
+			while (true) {
+				raceChoice = inputInt("Race Number");
+				if (raceChoice >=1 && raceChoice <= raceIds.size()) break;
+				System.out.println("Wrong selected.");
+			}
+			
+			String selectRaceId = raceIds.get(raceChoice - 1);
 			// 여기에 종족 정보 올릴 것
-			String race = sc.nextLine();
 		
 			System.out.print("Gender?(0=none, 1=Male, 2=Female) ▶ ");
 			Integer gender = inputInt("Gender");
 		
-			DefaultCharacterVO customizedPlayer = PlayerCustomize.apply(basePlayer, name, race, gender);
+			DefaultCharacterVO customizedPlayer = PlayerCustomize.apply(basePlayer, name, selectRaceId, gender);
 		
 			// 4. CharacterXmlGenerator
 			Path characterXml = slotDir.resolve("characters.xml");

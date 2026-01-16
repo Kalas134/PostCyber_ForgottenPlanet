@@ -1,4 +1,4 @@
-package testbuild;
+package daopkg;
 
 import systempkg.SqliteConnect;
 import systempkg.RaceTextXmlLoader;
@@ -14,47 +14,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-// After, Change to "RaceInFoDAO"
-public class RaceBasicInfoLoader {
-	public static void main(String[] args) {
-		List<String> RACE_IDs = new ArrayList<>();
-		// 1. Race Index output
+public class RaceInfoDAO {
+	
+	// 1. Race Index
+	public static List<String> loadRaceIds()throws Exception {
+		List<String> raceIds = new ArrayList<>();
+		
 		String listSql = "SELECT RACE_ID FROM Race_Basic_Stats ORDER BY RACE_ID";
 		
 		try (Connection conn = SqliteConnect.getConnection();
 			 PreparedStatement ps = conn.prepareStatement(listSql);
 			 ResultSet rs = ps.executeQuery()) {
-			System.out.println("===Race Index===");
-			int index = 1;
+			
 			while (rs.next()) {
-				String RaceID = rs.getString("RACE_ID");
-				RACE_IDs.add(RaceID);
-				System.out.println(index + ". " + RaceID);
-				index++;
+				raceIds.add("Race_ID");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
 		}
-		
-		if(RACE_IDs.isEmpty()) {
-			System.out.println("There is no race data.");
-			return;
-		}
-		
-		// 2. User output
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Selecte Race number: ");
-		int choice = sc.nextInt();
-		
-		if (choice < 1 || choice > RACE_IDs.size()) {
-			System.out.println("It's a wrong choice.");
-			return;
-		}
-		
-		String selectedRaceID = RACE_IDs.get(choice-1);
-		
-		// 3. Selected Race Stats output
+		return raceIds;
+	}
+	
+	// 2. Race Info print
+	
+	public static void printRaceInfo(String raceId, String lang) throws Exception {
 		
 		String dataSql =
 				"SELECT RACE_STR, RACE_CON, RACE_AGI, RACE_DEX, RACE_INT, RACE_WIS, RACE_LUK " +
@@ -63,14 +44,14 @@ public class RaceBasicInfoLoader {
 		try (Connection conn = SqliteConnect.getConnection();
 			 PreparedStatement ps = conn.prepareStatement(dataSql)) {
 			
-			ps.setString(1, selectedRaceID);
+			ps.setString(1, raceId);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
 				Map<String, RaceTextVO> raceTextMap =
-						RaceTextXmlLoader.loadRaceTexts("ko_KR");
+						RaceTextXmlLoader.loadRaceTexts(lang);
 				
-				RaceTextVO text = raceTextMap.get(selectedRaceID);
+				RaceTextVO text = raceTextMap.get(raceId);
 				
 				System.out.println("\n[" + text.getRaceName() + " Stats]");
 				System.out.println(text.getRaceDesc() + "\n");
