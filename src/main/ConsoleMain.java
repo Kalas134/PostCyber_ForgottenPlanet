@@ -17,7 +17,7 @@ import daopkg.RaceInfoDAO;
 public class ConsoleMain {
 	private static final Scanner sc = new Scanner(System.in);
 	
-	public static void consoleMain(String[] args) {
+	public static void main(String[] args) {
 		ConsoleMain main = new ConsoleMain();
 		main.run();
 	}
@@ -44,7 +44,7 @@ public class ConsoleMain {
 		System.out.println("1. New Game");
 		System.out.println("2. Load Game");
 		System.out.println("3. Option");
-		System.out.println("4. Exit");
+		System.out.println("0. Exit");
 		System.out.println("===============");
 	}
 	
@@ -60,8 +60,12 @@ public class ConsoleMain {
 			
 			// 2. DefaultCharacterLoader
 			DefaultCharacterLoader loader = new DefaultCharacterLoader();
+		//	DefaultCharacterVO basePlayer = loader.loadDefaultPlayer(); << 1명만 로드
 			
-			DefaultCharacterVO basePlayer = loader.loadDefaultPlayer();
+		//	전체 디폴트 캐릭터 로드 (Player + NPC)
+			
+			List<DefaultCharacterVO> defaultCharacters =
+					loader.loadAllDefaultCharacters();
 			
 			// 3. PlayerCustomize
 			System.out.print("Player Name? ▶ ");
@@ -85,15 +89,24 @@ public class ConsoleMain {
 		
 			System.out.print("Gender?(0=none, 1=Male, 2=Female) ▶ ");
 			Integer gender = inputInt("Gender");
-		
-			DefaultCharacterVO customizedPlayer = PlayerCustomize.apply(basePlayer, name, selectRaceId, gender);
+			
+			List<DefaultCharacterVO> finalCharacters = new java.util.ArrayList<>();
+			for (DefaultCharacterVO ch : defaultCharacters) {
+				if (ch.getChar_ID() == 1) {
+					DefaultCharacterVO customizedPlayer =
+							PlayerCustomize.apply(ch, name, selectRaceId, gender);
+					finalCharacters.add(customizedPlayer);
+				} else {
+					finalCharacters.add(ch);
+				}
+			}
 		
 			// 4. CharacterXmlGenerator
 			Path characterXml = slotDir.resolve("characters.xml");
 			
 			CharacterXmlGenerator.generateNewGameCharacterXml(
 					characterXml, 
-					List.of(customizedPlayer)
+					finalCharacters
 					);
 			
 			System.out.println("Character XML Saved.");
