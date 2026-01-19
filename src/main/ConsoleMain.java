@@ -1,13 +1,15 @@
 package main;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Scanner;
+import java.nio.file.*;
+import java.util.*;
 
 import testbuild.CharacterXmlGenerator;
 import testbuild.SaveSlotGenerator;
+import testbuild.SaveXmlLoader;
 
 import systempkg.PlayerCustomize;
+import systempkg.SaveSlotSelector;
+import systempkg.GameStart;
 
 import vopkg.DefaultCharacterVO;
 
@@ -113,7 +115,8 @@ public class ConsoleMain {
 			
 			// 5. GameStart
 			System.out.println("Game Start!");
-			// TODO: GameStart.run(characterXml);
+			
+			GameStart.run(finalCharacters);
 			
 		} catch (Exception e) {
 			System.out.println("New Game Error");
@@ -123,10 +126,26 @@ public class ConsoleMain {
 	
 	private void loadGame() {
 		System.out.println("[Load Game]");
-		// TODO:
+		
 		// 1. SaveSlot 선택
+		Optional<Path> slotPath = SaveSlotSelector.selectSlot(sc);
+		
+		if (slotPath.isEmpty()) {
+			System.out.println("Load canceled.");
+			return;
+		}
+		
+		Path characterXml = slotPath.get().resolve("characters.xml");
+		
 		// 2. SaveXmlLoader (XML → VO)
+		List<DefaultCharacterVO> loadCharacters =
+				SaveXmlLoader.loadCharacters(characterXml);
+		
 		// 3. GameStart
+		System.out.println("Game Start!");
+		
+		GameStart.run(loadCharacters);
+		
 	}
 	
 	private void showOption() {
