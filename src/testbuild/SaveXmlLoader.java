@@ -16,7 +16,7 @@ public class SaveXmlLoader {
 		try {
 			List<CharacterVO> characters = new ArrayList<>();
 			
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(xmlPath.toFile());
 			
@@ -46,9 +46,9 @@ public class SaveXmlLoader {
 						.item(0);
 				
 				Integer level = Integer.parseInt(
-						progress.getElementsByTagName("level").item(0).getTextContent());
+						progress.getElementsByTagName("Level").item(0).getTextContent());
 				Integer experience = Integer.parseInt(
-						progress.getElementsByTagName("experience").item(0).getTextContent());
+						progress.getElementsByTagName("Experience").item(0).getTextContent());
 				
 				
 				Element stats = (Element) characterEl

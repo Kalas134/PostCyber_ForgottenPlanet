@@ -124,7 +124,6 @@ public class ConsoleMain {
 	}
 	
 	private void loadGame() {
-		System.out.println("[Load Game]");
 		
 		// 1. SaveSlot 선택
 		Optional<Path> slotPath = SaveSlotSelector.selectSlot(sc);
