@@ -35,7 +35,7 @@ public class RaceInfoDAO {
 	public static RaceBasicStatsVO loadRaceStats(String raceId) throws Exception {
 		String sql = 
 				"SELECT RACE_STR, RACE_CON, RACE_AGI, RACE_DEX, " +
-				"RACE_INT, RACE_WIS, RACE_LUK" +
+				"RACE_INT, RACE_WIS, RACE_LUK " +
 				"FROM RACE_Basic_Stats WHERE RACE_ID = ?";
 
 		try (Connection conn = SqliteConnect.getConnection();
