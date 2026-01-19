@@ -9,12 +9,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.*;
 
-import vopkg.DefaultCharacterVO;
+import vopkg.CharacterVO;
 
 public class SaveXmlLoader {
-	public static List<DefaultCharacterVO> loadCharacters(Path xmlPath) {
+	public static List<CharacterVO> loadCharacters(Path xmlPath) {
 		try {
-			List<DefaultCharacterVO> characters = new ArrayList<>();
+			List<CharacterVO> characters = new ArrayList<>();
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -47,12 +47,15 @@ public class SaveXmlLoader {
 				
 				Integer level = Integer.parseInt(
 						progress.getElementsByTagName("level").item(0).getTextContent());
+				Integer experience = Integer.parseInt(
+						progress.getElementsByTagName("experience").item(0).getTextContent());
 				
 				
 				Element stats = (Element) characterEl
 						.getElementsByTagName("Char_Stats")
 						.item(0);
 				
+				Integer statPoint = Integer.parseInt(stats.getElementsByTagName("StatPoint").item(0).getTextContent());
 				Integer str = Integer.parseInt(stats.getElementsByTagName("STR").item(0).getTextContent());
 				Integer con = Integer.parseInt(stats.getElementsByTagName("CON").item(0).getTextContent());
 				Integer agi = Integer.parseInt(stats.getElementsByTagName("AGI").item(0).getTextContent());
@@ -61,12 +64,14 @@ public class SaveXmlLoader {
 				Integer wis = Integer.parseInt(stats.getElementsByTagName("WIS").item(0).getTextContent());
 				Integer luk = Integer.parseInt(stats.getElementsByTagName("LUK").item(0).getTextContent());
 				
-				DefaultCharacterVO vo = new DefaultCharacterVO(
+				CharacterVO vo = new CharacterVO(
 						charId,
 						presetName,
 						raceId,
 						gender,
 						level,
+						experience,
+						statPoint,
 						str,
 						con,
 						agi,

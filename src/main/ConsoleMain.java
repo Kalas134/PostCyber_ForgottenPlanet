@@ -12,6 +12,7 @@ import systempkg.SaveSlotSelector;
 import systempkg.GameStart;
 
 import vopkg.DefaultCharacterVO;
+import vopkg.CharacterVO;
 
 import daopkg.DefaultCharacterLoader;
 import daopkg.RaceInfoDAO;
@@ -113,10 +114,8 @@ public class ConsoleMain {
 			
 			System.out.println("Character XML Saved.");
 			
-			// 5. GameStart
-			System.out.println("Game Start!");
-			
-			GameStart.run(finalCharacters);
+			// 5. new game Start = Save -> Load -> Start
+			startGameFromSave(slotDir);
 			
 		} catch (Exception e) {
 			System.out.println("New Game Error");
@@ -135,16 +134,8 @@ public class ConsoleMain {
 			return;
 		}
 		
-		Path characterXml = slotPath.get().resolve("characters.xml");
-		
-		// 2. SaveXmlLoader (XML → VO)
-		List<DefaultCharacterVO> loadCharacters =
-				SaveXmlLoader.loadCharacters(characterXml);
-		
-		// 3. GameStart
-		System.out.println("Game Start!");
-		
-		GameStart.run(loadCharacters);
+		// 2. GameStart
+		startGameFromSave(slotPath.get());
 		
 	}
 	
@@ -169,5 +160,14 @@ public class ConsoleMain {
                 System.out.println("숫자를 입력하세요.");
 			}
 		}
+	}
+	
+	private void startGameFromSave(Path slotDir) {
+		Path characterXml = slotDir.resolve("characters.xml");
+		
+		List<CharacterVO> characters = 
+				SaveXmlLoader.loadCharacters(characterXml);
+		System.out.println("Game Start!!");
+		GameStart.run(characters);
 	}
 }
