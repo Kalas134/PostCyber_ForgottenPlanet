@@ -31,12 +31,14 @@ public class CharacterDeriverdStatsCalculator {
 		double base_crr = NumberUtil.round2((wis * 0.5) + (con * 0.3));
 		double crr = NumberUtil.applySoftCurve(base_crr, 75.0, CURVE_POWER);
 		
-		double pcr = BASE_CRIT_MULT
+		double pcr = NumberUtil.round2
+					 (BASE_CRIT_MULT
 				   + ((str + dex) * MATH_STAT_RATE)
-				   + (luk * LUK_RATE);
-		double mcr = BASE_CRIT_MULT
+				   + (luk * LUK_RATE));
+		double mcr = NumberUtil.round2
+					 (BASE_CRIT_MULT
 				   + ((intel + wis) * MATH_STAT_RATE)
-				   + (luk * LUK_RATE);
+				   + (luk * LUK_RATE));
 		
 		int spd = (agi * 2) + dex;
 		
