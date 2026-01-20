@@ -14,6 +14,9 @@ public class CharacterCombatStatsVO {
 	private final double crt;
 	private final double crr;
 	
+	private final double pcr;
+	private final double mcr;
+	
 	private final int spd;
 	
 	public CharacterCombatStatsVO(
@@ -21,6 +24,7 @@ public class CharacterCombatStatsVO {
 			int atk, int def, 
 			int mag, int res, 
 			double crt, double crr, 
+			double pcr, double mcr, 
 			int spd
 	) {
 		this.hp = hp;
@@ -31,6 +35,8 @@ public class CharacterCombatStatsVO {
 		this.res = res;
 		this.crt = crt;
 		this.crr = crr;
+		this.pcr = pcr;
+		this.mcr = mcr;
 		this.spd = spd;
 	}
 
@@ -45,6 +51,9 @@ public class CharacterCombatStatsVO {
 
 	public double getCrt() { return crt; }
 	public double getCrr() { return crr; }
+	
+	public double getPcr() { return pcr; }
+	public double getMcr() { return mcr; }
 
 	public int getSpd() { return spd; }
 	
