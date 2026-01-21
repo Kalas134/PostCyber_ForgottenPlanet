@@ -9,6 +9,9 @@ import javax.swing.border.EmptyBorder;
 
 import systempkg.GameContext;
 
+import panelpkg.MainMenuPanel;
+import panelpkg.PlayerCustomPanel;
+
 public class MainWindow extends JFrame {
 	
 	public static final String PANEL_MAIN_MENU = "MAIN_MENU";
@@ -36,11 +39,11 @@ public class MainWindow extends JFrame {
 	
 	private void initPanels(GameContext context) {
 		container.add(new MainMenuPanel(this, context), "MAIN_MENU");
-		container.add(new LoadSlotPanel(this, context), "LOAD_SLOTS");
-		container.add(new GameloadingPanel(this, context), "GAME_LOADING");
+//		container.add(new LoadSlotPanel(this, context), "LOAD_SLOTS");
+//		container.add(new GameloadingPanel(this, context), "GAME_LOADING");
 		container.add(new PlayerCustomPanel(this, context), "PLAYER_CUSTOM");
-		container.add(new GameMainPanel(this, context), "GAME_MAIN");
-		container.add(new CharacterStatsPanel(this, context), "CHAR_STATS_W");
+//		container.add(new GameMainPanel(this, context), "GAME_MAIN");
+//		container.add(new CharacterStatsPanel(this, context), "CHAR_STATS_W");
 	}
 	
 	public void showPanel(String name) {
