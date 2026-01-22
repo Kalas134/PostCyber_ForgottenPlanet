@@ -11,6 +11,7 @@ import systempkg.GameContext;
 
 import panelpkg.MainMenuPanel;
 import panelpkg.PlayerCustomPanel;
+import panelpkg.LoadSlotPanel;
 
 public class MainWindow extends JFrame {
 	
@@ -39,7 +40,7 @@ public class MainWindow extends JFrame {
 	
 	private void initPanels(GameContext context) {
 		container.add(new MainMenuPanel(this, context), "MAIN_MENU");
-//		container.add(new LoadSlotPanel(this, context), "LOAD_SLOTS");
+		container.add(new LoadSlotPanel(this, context), "LOAD_SLOTS");
 //		container.add(new GameloadingPanel(this, context), "GAME_LOADING");
 		container.add(new PlayerCustomPanel(this, context), "PLAYER_CUSTOM");
 //		container.add(new GameMainPanel(this, context), "GAME_MAIN");
