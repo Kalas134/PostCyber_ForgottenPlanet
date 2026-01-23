@@ -2,166 +2,211 @@ package panelpkg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.List;
 
 import windowpkg.MainWindow;
-
 import systempkg.GameContext;
+import systempkg.GameStartData;
+import systempkg.PlayerCustomize;
+
+import daopkg.RaceInfoDAO;
+import daopkg.DefaultCharacterLoader;
+
+import testbuild.SaveSlotGenerator;
+import testbuild.SaveXmlLoader;
+import testbuild.CharacterXmlGenerator;
+
+import vopkg.RaceBasicStatsVO;
+import vopkg.CharacterVO;
+import vopkg.DefaultCharacterVO;
 
 public class PlayerCustomPanel extends JPanel {
-	
+
 	private final MainWindow window;
 	private final GameContext context;
-	
+
 	private JTextField nameField;
 	private JComboBox<String> raceBox;
-	
+
 	private JRadioButton genderNone;
 	private JRadioButton genderMale;
 	private JRadioButton genderFemale;
-	
-	// Start label (프리뷰 용)
+
 	private JLabel strVal, conVal, agiVal, dexVal, intVal, wisVal, lukVal;
-	
+
 	public PlayerCustomPanel(MainWindow window, GameContext context) {
 		this.window = window;
 		this.context = context;
 		initUI();
+		loadRaceList();
 	}
-	
+
 	private void initUI() {
 		setLayout(new BorderLayout(10, 10));
-		
+
 		add(createTopPanel(), BorderLayout.NORTH);
 		add(createStatPreviewPanel(), BorderLayout.CENTER);
 		add(createBottomPanel(), BorderLayout.SOUTH);
 	}
-	
+
 	private JPanel createTopPanel() {
 		JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-		
-		// name
+
 		panel.add(new JLabel("Name"));
 		nameField = new JTextField();
 		panel.add(nameField);
-		
-		// gender
+
 		panel.add(new JLabel("Gender"));
 		JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		
+
 		genderNone = new JRadioButton("None", true);
 		genderMale = new JRadioButton("Male");
 		genderFemale = new JRadioButton("Female");
-		
+
 		ButtonGroup group = new ButtonGroup();
 		group.add(genderNone);
 		group.add(genderMale);
 		group.add(genderFemale);
-		
+
 		genderPanel.add(genderNone);
 		genderPanel.add(genderMale);
 		genderPanel.add(genderFemale);
-		
+
 		panel.add(genderPanel);
-		
-		// race
+
 		panel.add(new JLabel("Race"));
-		raceBox = new JComboBox<>(new String[] {
-				"Human", "Elf", "Dwarf"
-		});
-		
+		raceBox = new JComboBox<>();
 		raceBox.addActionListener(e -> updateRacePreview());
-		
 		panel.add(raceBox);
-		
+
 		return panel;
 	}
-	
-	// race stat preview
+
+	private void loadRaceList() {
+		try {
+			for (String id : RaceInfoDAO.loadRaceIds()) {
+				raceBox.addItem(id);
+			}
+			if (raceBox.getItemCount() > 0) {
+				raceBox.setSelectedIndex(0);
+				updateRacePreview();
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed to load race list");
+		}
+	}
+
 	private JPanel createStatPreviewPanel() {
 		JPanel panel = new JPanel(new GridLayout(7, 2, 8, 8));
 		panel.setBorder(BorderFactory.createTitledBorder("Race Basic Stats"));
-		
-		strVal = addStatRow(panel, "STR");
-		conVal = addStatRow(panel, "CON");
-		agiVal = addStatRow(panel, "AGI");
-		dexVal = addStatRow(panel, "DEX");
-		intVal = addStatRow(panel, "INT");
-		wisVal = addStatRow(panel, "WIS");
-		lukVal = addStatRow(panel, "LUK");
-		
-		updateRacePreview();
-		
+
+		strVal = addStat(panel, "STR");
+		conVal = addStat(panel, "CON");
+		agiVal = addStat(panel, "AGI");
+		dexVal = addStat(panel, "DEX");
+		intVal = addStat(panel, "INT");
+		wisVal = addStat(panel, "WIS");
+		lukVal = addStat(panel, "LUK");
+
 		return panel;
 	}
-	
-	private JLabel addStatRow(JPanel panel, String name) {
+
+	private JLabel addStat(JPanel panel, String name) {
 		panel.add(new JLabel(name));
-		JLabel val = new JLabel("0");
-		panel.add(val);
-		return val;
+		JLabel v = new JLabel("0");
+		panel.add(v);
+		return v;
 	}
-	
-	// updateRacePreview
+
 	private void updateRacePreview() {
-		String race = (String) raceBox.getSelectedItem();
-		
-		int str = 0, con = 0, agi = 0, dex = 0, intel = 0, wis = 0, luk = 0;
-		
-		switch (race) {
-			case "Human" -> {
-				str = 10; con = 10; agi = 10; dex = 10; intel = 10; wis = 10; luk = 10;
-			}
-			case "Elf" -> {
-				str = 7; con = 8; agi = 12; dex = 11; intel = 12; wis = 11; luk = 9;
-			}
-			case "Dwarf" -> {
-				str = 12; con = 12; agi = 8; dex = 11; intel = 12; wis = 10; luk = 5;
-			}
+		String raceId = (String) raceBox.getSelectedItem();
+		if (raceId == null) return;
+
+		try {
+			RaceBasicStatsVO stats = RaceInfoDAO.loadRaceStats(raceId);
+
+			strVal.setText(String.valueOf(stats.getStr()));
+			conVal.setText(String.valueOf(stats.getCon()));
+			agiVal.setText(String.valueOf(stats.getAgi()));
+			dexVal.setText(String.valueOf(stats.getDex()));
+			intVal.setText(String.valueOf(stats.getIntel()));
+			wisVal.setText(String.valueOf(stats.getWis()));
+			lukVal.setText(String.valueOf(stats.getLuk()));
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed to load race stats");
 		}
-		
-		strVal.setText(String.valueOf(str));
-		conVal.setText(String.valueOf(con));
-		agiVal.setText(String.valueOf(agi));
-		dexVal.setText(String.valueOf(dex));
-		intVal.setText(String.valueOf(intel));
-		wisVal.setText(String.valueOf(wis));
-		lukVal.setText(String.valueOf(luk));
 	}
-	
-	// 승인 / 취소
+
 	private JPanel createBottomPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		
+
 		JButton back = new JButton("Back");
 		JButton confirm = new JButton("Confirm");
-		
+
 		back.addActionListener(e ->
-				window.showPanel(MainWindow.PANEL_MAIN_MENU)
+			window.showPanel(MainWindow.PANEL_MAIN_MENU)
 		);
-		
+
 		confirm.addActionListener(e -> onConfirm());
-		
+
 		panel.add(back);
 		panel.add(confirm);
-		
+
 		return panel;
 	}
-	
-	// confirm Progress
+
 	private void onConfirm() {
 		if (nameField.getText().isBlank()) {
 			JOptionPane.showMessageDialog(this, "Enter character name");
 			return;
 		}
-		
-		int gender =
-				genderNone.isSelected() ? 0 :
-	            genderMale.isSelected() ? 1 : 2;
-		
-//		context.setPlayerName(nameField.getText());
-//		context.setPlayerRace((String) raceBox.getSelectedItem());
-//		context.setPlayerGender(gender);
-		
-		window.showPanel(MainWindow.PANEL_GAME_MAIN);
+
+		try {
+			// 1. Save slot 생성
+			Path slotDir = SaveSlotGenerator.createNewSaveSlot(Path.of("save"));
+
+			// 2. 디폴트 캐릭터 전체 로드
+			DefaultCharacterLoader loader = new DefaultCharacterLoader();
+			List<DefaultCharacterVO> characters =
+					loader.loadAllDefaultCharacters();
+
+			// 3. 입력값 수집
+			String name = nameField.getText().trim();
+			String race = (String) raceBox.getSelectedItem();
+			int gender =
+					genderMale.isSelected() ? 1 :
+					genderFemale.isSelected() ? 2 : 0;
+
+			// 4. 플레이어(Char_ID = 1)만 치환
+			for (int i = 0; i < characters.size(); i++) {
+				characters.set(
+					i,
+					PlayerCustomize.apply(
+						characters.get(i),
+						name,
+						race,
+						gender
+					)
+				);
+			}
+
+			// 5. XML 생성
+			Path xmlPath = slotDir.resolve("characters.xml");
+			CharacterXmlGenerator.generateNewGameCharacterXml(
+					xmlPath, characters);
+
+			// 6. 콘솔과 동일: 방금 만든 세이브 로드 → 게임 시작
+			List<CharacterVO> loadedCharacters =
+					SaveXmlLoader.loadCharacters(xmlPath);
+
+			// 콘솔 출력이 떠도 상관 없음
+			GameStartData.run(loadedCharacters);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Save failed");
+			e.printStackTrace();
+		}
 	}
 }
