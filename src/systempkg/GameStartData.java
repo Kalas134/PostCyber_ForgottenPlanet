@@ -1,14 +1,16 @@
 package systempkg;
 
 import java.util.List;
+
+import viewpkg.CharacterStatusView;
+
 import java.util.ArrayList;
 
 import vopkg.CharacterVO;
 import vopkg.CharacterFinalStatsVO;
-import viewpkg.CharacterStatusView;
 
 public class GameStartData {
-	public static void run(List<CharacterVO> characters) {
+	public static List<CharacterFinalStatsVO> run(List<CharacterVO> characters) throws Exception {
 		System.out.println("==Game Start==");
 	
 		// 출력 검사
@@ -16,14 +18,12 @@ public class GameStartData {
 	    List<CharacterFinalStatsVO> finalStatsList = new ArrayList<>();
 	    
 	    for (CharacterVO vo : characters) {
-	    	try {
-	    		finalStatsList.add(CharacterStatsService.buildFinalStats(vo)
-	    		);
-	    	} catch (Exception e) {
-	    		throw new RuntimeException("Failed to build stats for " + vo.getName(), e);
-	    	}
+	    	finalStatsList.add(CharacterStatsService.buildFinalStats(vo)
+	    	);
 	    }
-	    CharacterStatusView.printCharacters(finalStatsList);
+	    
+//	    CharacterStatusView.printCharacters(finalStatsList);
+	    return finalStatsList;
 	/*
 		// 1. Player load
 		

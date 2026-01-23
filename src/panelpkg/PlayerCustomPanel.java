@@ -18,6 +18,7 @@ import testbuild.SaveXmlLoader;
 import testbuild.CharacterXmlGenerator;
 
 import vopkg.RaceBasicStatsVO;
+import vopkg.CharacterFinalStatsVO;
 import vopkg.CharacterVO;
 import vopkg.DefaultCharacterVO;
 
@@ -201,8 +202,22 @@ public class PlayerCustomPanel extends JPanel {
 			List<CharacterVO> loadedCharacters =
 					SaveXmlLoader.loadCharacters(xmlPath);
 
-			// 콘솔 출력이 떠도 상관 없음
-			GameStartData.run(loadedCharacters);
+			// 7. 게임 시작 데이터 생성
+			List<CharacterFinalStatsVO> finalStats =
+					GameStartData.run(loadedCharacters);
+			
+			// 8. GameContext 설정
+			context.setInGame(true);
+			context.setCurrentSaveSlot(
+					Integer.parseInt(slotDir.getFileName().toString())
+			);
+			
+			// 9. 캐릭터 정보창으로 이동
+			window.showPanel(
+					MainWindow.PANEL_GAME_ALL_CHAR_INFO,
+					new GameAllCharInfoPanel(window, finalStats)
+					);
+//			GameStartData.run(loadedCharacters);
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Save failed");
